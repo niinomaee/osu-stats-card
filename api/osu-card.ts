@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { fetchOsuStats } from "../lib/osu";
-import { renderOsuCard } from "../lib/render-osu-card";
-import { isRateLimited } from "../lib/rate-limit";
+import { fetchOsuStats } from "../lib/osu.js";
+import { renderOsuCard } from "../lib/render-osu-card.js";
+import { isRateLimited } from "../lib/rate-limit.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");

@@ -1,4 +1,4 @@
-import type { OsuStats } from "./osu";
+import type { OsuStats } from "./osu.js";
 
 function formatRank(rank: number | null): string {
   return rank ? `#${rank.toLocaleString("en-US")}` : "Unranked";
