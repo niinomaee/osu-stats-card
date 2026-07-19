@@ -1,13 +1,16 @@
 # osu! Stats Card
 
 Generate an SVG stat card for your osu! profile, embeddable in your GitHub README.
+<p align="center">
+<img src="./preview.jpg">
+</p>
 
-## Just want to use it? (NOT YET)
+## Just want to use it?
 
 You don't need to set up anything. Just add this to your GitHub README, replacing `USERNAME` with your osu! username:
 
 ```md
-![osu stats](https://your-project.vercel.app/api/osu-card?user=USERNAME)
+![osu stats](https://osu-stats-card-five.vercel.app/api/osu-card?user=USERNAME)
 ```
 
 Optionally add `&mode=taiko` (or `fruits` / `mania`) if you want stats for a mode other than standard.
