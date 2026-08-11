@@ -59,6 +59,7 @@ http://localhost:3000/api/osu-card?user=USERNAME&mode=osu
 - [ ] Recent top play display
 - [ ] Color theme options
 - [ ] Chart stats
+- [ ] User avatar
 
 ## Tech Stack
 - Vercel Serverless Functions (Node.js runtime)
