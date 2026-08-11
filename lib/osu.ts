@@ -13,6 +13,25 @@ export interface OsuStats {
 let cachedToken: { token: string; expiresAt: number } | null = null;
 const statsCache = new Map<string, { data: OsuStats; expiresAt: number }>();
 const CACHE_TTL_MS = 5 * 60 * 1000;
+const FETCH_TIMEOUT_MS = 5000;
+
+// Wraps fetch with a timeout so a slow/hanging osu! API doesn't tie up the
+// serverless function until Vercel's maxDuration kills it with a vague error.
+async function fetchWithTimeout(url: string, init: RequestInit = {}): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } catch (err) {
+    if ((err as Error).name === "AbortError") {
+      throw new Error("osu! API request timed out");
+    }
+    throw err;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
 async function getAccessToken(): Promise<string> {
   if (cachedToken && cachedToken.expiresAt > Date.now()) {
@@ -25,7 +44,7 @@ async function getAccessToken(): Promise<string> {
     throw new Error("Missing OSU_CLIENT_ID or OSU_CLIENT_SECRET in env");
   }
 
-  const res = await fetch("https://osu.ppy.sh/oauth/token", {
+  const res = await fetchWithTimeout("https://osu.ppy.sh/oauth/token", {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify({
@@ -59,7 +78,7 @@ export async function fetchOsuStats(
 
   const token = await getAccessToken();
 
-  const res = await fetch(
+  const res = await fetchWithTimeout(
     `https://osu.ppy.sh/api/v2/users/${encodeURIComponent(username)}/${mode}`,
     {
       headers: {
